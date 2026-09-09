@@ -4,24 +4,24 @@ import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Kontak",
-  description: "Hubungi Eda Photography untuk konsultasi dan booking sesi foto.",
+  description: "Hubungi IMAZING VISUAL untuk konsultasi dan booking sesi foto.",
 };
 
 const CONTACT_CHANNELS = [
   {
     label: "WhatsApp",
-    value: "+62 800-0000-000",
-    href: "https://wa.me/6280000000000",
+    value: "+62 816-3261-1996",
+    href: "https://wa.me/6281632611996",
   },
   {
     label: "Email",
-    value: "halo@edaphotography.com",
-    href: "mailto:halo@edaphotography.com",
+    value: "imazingvisual.new@gmail.com",
+    href: "mailto:imazingvisual.new@gmail.com",
   },
   {
     label: "Instagram",
-    value: "@edaphotography",
-    href: "https://instagram.com/edaphotography",
+    value: "@imazingvisual_new",
+    href: "https://instagram.com/imazingvisual_new",
   },
 ];
 
@@ -72,7 +72,7 @@ export default function KontakPage() {
               </div>
               <div className="flex justify-between">
                 <dt>Sabtu</dt>
-                <dd>09.00 — 15.00</dd>
+                <dd>09.00 — 18.00</dd>
               </div>
               <div className="flex justify-between">
                 <dt>Minggu</dt>
