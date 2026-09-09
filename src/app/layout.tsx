@@ -16,8 +16,8 @@ const openSans = Open_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Eda Photography — Studio Foto Profesional",
-    template: "%s | Eda Photography",
+    default: "IMAZING VISUAL — Studio Foto Profesional",
+    template: "%s | IMAZING VISUAL",
   },
   description:
     "Studio fotografi profesional untuk wedding, prewedding, dan potret keluarga. Seleksi foto hasil sesi Anda langsung lewat portal klien.",
