@@ -154,67 +154,76 @@ export default function LayananPage() {
           </div>
 
           <div className="grid gap-8 lg:grid-cols-2">
-            {SERVICES.map((service) => {
-              const Icon = service.icon;
-              return (
-                <div
-                  key={service.title}
-                  className="group relative flex flex-col justify-between overflow-hidden rounded-[2.5rem] border border-border bg-surface p-10 transition-all duration-300 hover:-translate-y-2 hover:border-accent/40 hover:shadow-2xl hover:shadow-accent/5"
-                >
-                  <div className="absolute top-0 right-0 p-8 opacity-5 text-foreground transition-opacity group-hover:opacity-10 group-hover:text-accent">
-                    <Icon className="h-32 w-32" />
-                  </div>
-                  
-                  <div className="relative z-10">
-                    <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-2 text-foreground transition-colors group-hover:bg-accent group-hover:text-accent-foreground">
-                      <Icon className="h-8 w-8" strokeWidth={1.5} />
-                    </div>
-                    <h2 className="font-heading text-3xl font-semibold text-foreground mb-4">
-                      {service.title}
-                    </h2>
-                    <p className="text-base font-light leading-relaxed text-muted mb-8">
-                      {service.description}
-                    </p>
-                    
-                    <ul className="space-y-4 border-t border-border/50 pt-8">
-                      {service.points.map((point) => (
-                        <li
-                          key={point}
-                          className="flex items-center gap-3 text-sm text-foreground/80 font-medium"
-                        >
-                          <CheckCircle2 className="h-5 w-5 text-accent shrink-0" />
-                          {point}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+        {SERVICES.map((service) => {
+          const Icon = service.icon;
+          return (
+            <div
+              key={service.title}
+              className="group relative flex flex-col justify-between overflow-hidden rounded-[2.5rem] border border-border bg-surface p-10 transition-all duration-300 hover:-translate-y-2 hover:border-accent/40 hover:shadow-2xl hover:shadow-accent/5"
+            >
+              <div className="absolute top-0 right-0 p-8 opacity-5 text-foreground transition-opacity group-hover:opacity-10 group-hover:text-accent">
+                <Icon className="h-32 w-32" />
+              </div>
+              
+              <div className="relative z-10">
+                <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-2 text-foreground transition-colors group-hover:bg-accent group-hover:text-accent-foreground">
+                  <Icon className="h-8 w-8" strokeWidth={1.5} />
                 </div>
-              );
-            })}
-          </div>
-
-          <div className="mt-20 overflow-hidden rounded-[3rem] border border-border bg-surface relative">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(201,166,107,0.1),transparent_60%)]" />
-            <div className="relative flex flex-col items-center gap-6 px-8 py-16 text-center">
-              <h2 className="font-heading text-3xl font-bold text-foreground">
-                Miliki Cerita Anda Sendiri
-              </h2>
-              <p className="max-w-xl text-lg text-muted font-light mb-4">
-                Punya konsep unik yang ingin diwujudkan? Atau ingin menyesuaikan paket 
-                dengan kebutuhan spesifik Anda?
-              </p>
-              <Link
-                href="/kontak"
-                className="group flex items-center gap-2 rounded-full bg-foreground px-10 py-5 text-sm font-semibold tracking-wide text-background transition-all duration-300 hover:scale-105 hover:bg-accent hover:text-accent-foreground"
-              >
-                Konsultasikan Sekarang
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
+                <h2 className="font-heading text-3xl font-semibold text-foreground mb-4">
+                  {service.title}
+                </h2>
+                <p className="text-base font-light leading-relaxed text-muted mb-8">
+                  {service.description}
+                </p>
+                
+                {/* Perbaikan: Melakukan map ke service.packages, bukan service.points */}
+                <div className="space-y-6 border-t border-border/50 pt-8">
+                  {service.packages.map((pkg, pkgIndex) => (
+                    <div key={pkgIndex} className="space-y-2">
+                      <h3 className="text-lg font-semibold text-foreground">{pkg.title}</h3>
+                      <p className="text-sm text-muted">{pkg.description}</p>
+                      <ul className="space-y-2 pt-2">
+                        {pkg.points.map((point: string, pointIndex: number) => (
+                          <li
+                            key={pointIndex}
+                            className="flex items-center gap-3 text-sm text-foreground/80 font-medium"
+                          >
+                            <CheckCircle2 className="h-4 w-4 text-accent shrink-0" />
+                            {point}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-20 overflow-hidden rounded-[3rem] border border-border bg-surface relative">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(201,166,107,0.1),transparent_60%)]" />
+        <div className="relative flex flex-col items-center gap-6 px-8 py-16 text-center">
+          <h2 className="font-heading text-3xl font-bold text-foreground">
+            Miliki Cerita Anda Sendiri
+          </h2>
+          <p className="max-w-xl text-lg text-muted font-light mb-4">
+            Punya konsep unik yang ingin diwujudkan? Atau ingin menyesuaikan paket 
+            dengan kebutuhan spesifik Anda?
+          </p>
+          <Link
+            href="/kontak"
+            className="group flex items-center gap-2 rounded-full bg-foreground px-10 py-5 text-sm font-semibold tracking-wide text-background transition-all duration-300 hover:scale-105 hover:bg-accent hover:text-accent-foreground"
+          >
+            Konsultasikan Sekarang
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
         </div>
-      </main>
-      <Footer />
-    </>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</>
   );
 }
