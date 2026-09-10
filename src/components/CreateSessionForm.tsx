@@ -7,6 +7,8 @@ export default function CreateSessionForm() {
   const router = useRouter();
   const [clientName, setClientName] = useState("");
   const [driveSourceFolderId, setDriveSourceFolderId] = useState("");
+  const [maxSelections, setMaxSelections] = useState("");
+  const [selectionDeadline, setSelectionDeadline] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [createdCode, setCreatedCode] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,7 +22,14 @@ export default function CreateSessionForm() {
       const res = await fetch("/api/sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ clientName, driveSourceFolderId }),
+        body: JSON.stringify({
+          clientName,
+          driveSourceFolderId,
+          maxSelections: maxSelections ? Number(maxSelections) : null,
+          selectionDeadline: selectionDeadline
+            ? new Date(selectionDeadline).toISOString()
+            : null,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -30,6 +39,8 @@ export default function CreateSessionForm() {
       setCreatedCode(data.session.sessionCode);
       setClientName("");
       setDriveSourceFolderId("");
+      setMaxSelections("");
+      setSelectionDeadline("");
       router.refresh();
     } catch {
       setError("Terjadi kesalahan koneksi.");
@@ -68,6 +79,34 @@ export default function CreateSessionForm() {
           Ambil dari URL folder: drive.google.com/drive/folders/
           <span className="text-foreground">ID_INI</span>
         </p>
+      </div>
+
+      <div>
+        <label htmlFor="maxSelections" className="mb-1.5 block text-sm text-muted">
+          Batas Maksimal Foto Dipilih (opsional)
+        </label>
+        <input
+          id="maxSelections"
+          type="number"
+          min={1}
+          value={maxSelections}
+          onChange={(e) => setMaxSelections(e.target.value)}
+          placeholder="Kosongkan = tanpa batas"
+          className="w-full rounded-xl border border-border bg-surface-2 px-4 py-2.5 text-foreground outline-none transition-colors duration-200 focus:border-accent"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="selectionDeadline" className="mb-1.5 block text-sm text-muted">
+          Deadline Pemilihan Foto (opsional)
+        </label>
+        <input
+          id="selectionDeadline"
+          type="datetime-local"
+          value={selectionDeadline}
+          onChange={(e) => setSelectionDeadline(e.target.value)}
+          className="w-full rounded-xl border border-border bg-surface-2 px-4 py-2.5 text-foreground outline-none transition-colors duration-200 focus:border-accent"
+        />
       </div>
 
       {error && (
