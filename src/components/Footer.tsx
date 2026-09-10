@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col gap-8 md:flex-row md:items-start md:justify-between">
         <div>
           <p className="font-heading text-lg font-semibold text-foreground">
-            Eda Photography
+            IMAZING VISUAL
           </p>
           <p className="mt-2 max-w-xs text-sm text-muted">
             Studio fotografi profesional — wedding, prewedding, dan potret
@@ -20,15 +20,15 @@ export default function Footer() {
             <ul className="space-y-2 text-muted">
               <li>
                 <a
-                  href="mailto:halo@edaphotography.com"
+                  href="mailto:imazingvisual.new@gmail.com"
                   className="cursor-pointer transition-colors duration-200 hover:text-foreground"
                 >
-                  halo@edaphotography.com
+                  imazingvisual.new@gmail.com
                 </a>
               </li>
               <li>
                 <a
-                  href="https://wa.me/6280000000000"
+                  href="https://wa.me/628163261996"
                   className="cursor-pointer transition-colors duration-200 hover:text-foreground"
                 >
                   WhatsApp
@@ -92,7 +92,7 @@ export default function Footer() {
       </div>
 
       <p className="mx-auto mt-10 max-w-6xl text-xs text-muted">
-        © {new Date().getFullYear()} Eda Photography. Semua hak cipta
+        © {new Date().getFullYear()} IMAZING VISUAL. Semua hak cipta
         dilindungi.
       </p>
     </footer>
