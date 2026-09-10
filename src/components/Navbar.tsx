@@ -19,7 +19,7 @@ export default function Navbar() {
           href="/"
           className="font-heading text-lg font-semibold tracking-tight text-foreground"
         >
-          Eda Photography
+          IMAZING VISUAL
         </Link>
 
         <ul className="hidden items-center gap-8 md:flex">
