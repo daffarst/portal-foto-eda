@@ -1,4 +1,5 @@
 import { google } from "googleapis";
+import type { Readable } from "node:stream";
 import { prisma } from "@/lib/db";
 
 const SCOPES = ["https://www.googleapis.com/auth/drive"];
@@ -58,14 +59,6 @@ async function getDriveClient(photographerId: string) {
   return google.drive({ version: "v3", auth: client });
 }
 
-export async function getConnectedAccountEmail(
-  photographerId: string
-): Promise<string | null> {
-  const drive = await getDriveClient(photographerId);
-  const res = await drive.about.get({ fields: "user" });
-  return res.data.user?.emailAddress ?? null;
-}
-
 export interface DrivePhoto {
   driveFileId: string;
   filename: string;
@@ -107,30 +100,93 @@ export async function listPhotosInFolder(
   return photos;
 }
 
-/** Buat folder "Hasil Seleksi" di dalam folder sesi kalau belum ada (idempotent). */
-export async function ensureResultFolder(
+/** Buat folder bernama `name` di dalam `parentFolderId` kalau belum ada (idempotent). */
+export async function ensureFolder(
   parentFolderId: string,
+  name: string,
   photographerId: string
 ): Promise<string> {
   const drive = await getDriveClient(photographerId);
+  const escapedName = name.replace(/'/g, "\\'");
 
   const existing = await drive.files.list({
-    q: `'${parentFolderId}' in parents and name = '${RESULT_FOLDER_NAME}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
+    q: `'${parentFolderId}' in parents and name = '${escapedName}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
     fields: "files(id)",
+    supportsAllDrives: true,
+    includeItemsFromAllDrives: true,
   });
   const found = existing.data.files?.[0];
   if (found?.id) return found.id;
 
   const created = await drive.files.create({
     requestBody: {
-      name: RESULT_FOLDER_NAME,
+      name,
       mimeType: "application/vnd.google-apps.folder",
       parents: [parentFolderId],
     },
     fields: "id",
+    supportsAllDrives: true,
   });
-  if (!created.data.id) throw new Error("Gagal membuat folder Hasil Seleksi di Drive.");
+  if (!created.data.id) throw new Error(`Gagal membuat folder "${name}" di Drive.`);
   return created.data.id;
+}
+
+/** Buat folder "Hasil Seleksi" di dalam folder sesi kalau belum ada (idempotent). */
+export async function ensureResultFolder(
+  parentFolderId: string,
+  photographerId: string
+): Promise<string> {
+  return ensureFolder(parentFolderId, RESULT_FOLDER_NAME, photographerId);
+}
+
+/** Email akun Google yang sedang terhubung — dipakai untuk instruksi "share folder ke email ini". */
+export async function getConnectedAccountEmail(photographerId: string): Promise<string | null> {
+  const drive = await getDriveClient(photographerId);
+  const res = await drive.about.get({ fields: "user(emailAddress)" });
+  return res.data.user?.emailAddress ?? null;
+}
+
+export interface FolderInfo {
+  id: string;
+  name: string;
+}
+
+/**
+ * Verifikasi folder Drive bisa dipakai sebagai tujuan hasil seleksi:
+ * harus benar-benar ada, harus folder (bukan file biasa), dan akun yang
+ * terhubung harus punya izin Editor (canAddChildren) ke dalamnya. Lempar
+ * Error dengan pesan yang jelas kalau salah satu syarat tidak terpenuhi.
+ */
+export async function verifyFolderAccess(
+  folderId: string,
+  photographerId: string
+): Promise<FolderInfo> {
+  const drive = await getDriveClient(photographerId);
+
+  let res;
+  try {
+    res = await drive.files.get({
+      fileId: folderId,
+      fields: "id, name, mimeType, capabilities(canAddChildren)",
+      supportsAllDrives: true,
+    });
+  } catch {
+    throw new Error(
+      "Folder tidak ditemukan atau akun yang terhubung tidak punya akses sama sekali ke folder ini."
+    );
+  }
+
+  if (res.data.mimeType !== "application/vnd.google-apps.folder") {
+    throw new Error("Link ini bukan folder Google Drive.");
+  }
+  if (!res.data.capabilities?.canAddChildren) {
+    const email = await getConnectedAccountEmail(photographerId).catch(() => null);
+    throw new Error(
+      `Akun Google yang terhubung tidak punya izin edit ke folder ini. Minta pemilik folder share sebagai "Editor"${email ? ` ke ${email}` : ""}, lalu coba lagi.`
+    );
+  }
+
+  return { id: res.data.id ?? folderId, name: res.data.name ?? "(tanpa nama)" };
 }
 
 export type CopyMode = "copy" | "shortcut";
@@ -173,4 +229,32 @@ export async function copySelectedPhotos(
   }
 
   return results;
+}
+
+export interface DriveFileStream {
+  stream: Readable;
+  mimeType: string;
+}
+
+/**
+ * Download file asli (bukan thumbnail) langsung dari Drive, di-stream
+ * lewat server kita (bukan link publik) — jadi tidak perlu ubah permission
+ * file di Drive milik fotografer supaya klien bisa unduh foto pilihannya.
+ */
+export async function downloadFile(
+  fileId: string,
+  photographerId: string
+): Promise<DriveFileStream> {
+  const drive = await getDriveClient(photographerId);
+
+  const meta = await drive.files.get({ fileId, fields: "mimeType" });
+  const file = await drive.files.get(
+    { fileId, alt: "media" },
+    { responseType: "stream" }
+  );
+
+  return {
+    stream: file.data as unknown as Readable,
+    mimeType: meta.data.mimeType ?? "application/octet-stream",
+  };
 }
