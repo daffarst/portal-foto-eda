@@ -204,8 +204,3 @@ export default function LayananPage() {
     </>
   );
 }
-
-      <Footer />
-    </>
-  );
-}
