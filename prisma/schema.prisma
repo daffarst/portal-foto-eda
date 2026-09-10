@@ -1,0 +1,94 @@
+// Prisma schema — Portal Foto Eda
+// Dev: SQLite lokal. Untuk deploy ke Vercel, ganti provider ke "postgresql"
+// (mis. Neon/Supabase free tier) karena filesystem Vercel bersifat ephemeral.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Satu akun per fotografer. Multi-fotografer: tiap sesi klien & koneksi
+// Google Drive terikat ke satu Photographer, bukan admin tunggal.
+model Photographer {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  sessions     Session[]
+  driveAccount DriveAccount?
+}
+
+model Session {
+  id                  String   @id @default(cuid())
+  photographerId      String
+  clientName          String
+  sessionCode         String   @unique
+  driveSourceFolderId String
+  driveResultFolderId String?
+  status              String    @default("active") // active | finalized
+  maxSelections       Int?
+  selectionDeadline   DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime @updatedAt
+
+  photographer Photographer @relation(fields: [photographerId], references: [id], onDelete: Cascade)
+  photos       Photo[]
+  selections   Selection[]
+
+  @@index([photographerId])
+}
+
+model Photo {
+  id           String   @id @default(cuid())
+  sessionId    String
+  driveFileId  String
+  filename     String
+  thumbnailUrl String?
+  mimeType     String?
+  sizeBytes    Int?
+  createdAt    DateTime @default(now())
+
+  session    Session     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  selections Selection[]
+
+  @@unique([sessionId, driveFileId])
+}
+
+model Selection {
+  id         String   @id @default(cuid())
+  sessionId  String
+  photoId    String
+  selectedAt DateTime @default(now())
+
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  photo   Photo   @relation(fields: [photoId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, photoId])
+}
+
+// Refresh token OAuth milik masing-masing fotografer (bukan service
+// account) — satu akun Drive per fotografer. Lihat lib/drive.ts.
+model DriveAccount {
+  id             String   @id @default(cuid())
+  photographerId String   @unique
+  refreshToken   String
+  updatedAt      DateTime @updatedAt
+
+  // Folder tujuan hasil seleksi (opsional) — boleh link folder Drive
+  // MANAPUN (bukan cuma folder sumber foto), asal folder itu sudah
+  // di-share sebagai Editor ke akun Google yang terhubung di atas.
+  // Kalau kosong, sistem fallback ke folder sumber foto per-sesi (lama).
+  resultFolderLink      String?
+  resultFolderId        String?
+  resultFolderName      String?
+  resultFolderError     String?
+  resultFolderCheckedAt DateTime?
+
+  photographer Photographer @relation(fields: [photographerId], references: [id], onDelete: Cascade)
+}
