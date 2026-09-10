@@ -6,10 +6,9 @@ generator client {
   provider = "prisma-client-js"
 }
 
-datasource db { 
-provider = "postgresql" 
-url = env("DATABASE_URL") 
-directUrl = env("DIRECT_URL") 
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 // Satu akun per fotografer. Multi-fotografer: tiap sesi klien & koneksi
@@ -32,8 +31,10 @@ model Session {
   sessionCode         String   @unique
   driveSourceFolderId String
   driveResultFolderId String?
-  status              String   @default("active") // active | finalized
-  createdAt           DateTime @default(now())
+  status              String    @default("active") // active | finalized
+  maxSelections       Int?
+  selectionDeadline   DateTime?
+  createdAt           DateTime  @default(now())
   updatedAt           DateTime @updatedAt
 
   photographer Photographer @relation(fields: [photographerId], references: [id], onDelete: Cascade)
@@ -78,6 +79,16 @@ model DriveAccount {
   photographerId String   @unique
   refreshToken   String
   updatedAt      DateTime @updatedAt
+
+  // Folder tujuan hasil seleksi (opsional) — boleh link folder Drive
+  // MANAPUN (bukan cuma folder sumber foto), asal folder itu sudah
+  // di-share sebagai Editor ke akun Google yang terhubung di atas.
+  // Kalau kosong, sistem fallback ke folder sumber foto per-sesi (lama).
+  resultFolderLink      String?
+  resultFolderId        String?
+  resultFolderName      String?
+  resultFolderError     String?
+  resultFolderCheckedAt DateTime?
 
   photographer Photographer @relation(fields: [photographerId], references: [id], onDelete: Cascade)
 }
