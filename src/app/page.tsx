@@ -4,21 +4,28 @@ import Footer from "@/components/Footer";
 
 const SERVICES = [
   {
-    title: "Wedding",
-    description:
-      "Dokumentasi hari pernikahan lengkap, dari persiapan hingga resepsi.",
+    title: "ALL-IN PACKAGE",
+    description: "Prewedding-Sangjit-Holy Matrimony-Wedding Day.",
   },
   {
     title: "Prewedding",
-    description: "Sesi foto konsep sebelum hari pernikahan, indoor & outdoor.",
+    description: "Sesi foto berkonsep untuk menceritakan kisah Anda berdua.",
   },
   {
-    title: "Potret Keluarga",
-    description: "Sesi foto keluarga santai maupun formal di studio atau lokasi pilihan.",
+    title: "simplycity indoor Sessions",
+    description: "simplycity indoor Sessions",
   },
   {
-    title: "Event & Korporat",
-    description: "Dokumentasi acara perusahaan, ulang tahun, dan momen spesial lainnya.",
+    title: "before wedding ",
+    description: "Engagment-Sangjit-Holy Matrimony",
+  },
+  {
+    title: "Wedding Day Collections",
+    description: "wedding day documentation (exclude Sangjit & Holy Matrimony)",
+  },
+  {
+    title: "Extra",
+    description: "extra items exclude in the package",
   },
 ];
 
