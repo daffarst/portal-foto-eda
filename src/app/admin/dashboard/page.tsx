@@ -2,8 +2,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentPhotographer } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { getConnectedAccountEmail } from "@/lib/drive";
 import CreateSessionForm from "@/components/CreateSessionForm";
 import AdminLogoutButton from "@/components/AdminLogoutButton";
+import DriveDestinationForm from "@/components/DriveDestinationForm";
 
 interface PageProps {
   searchParams: Promise<{ drive_connected?: string; drive_error?: string }>;
@@ -28,6 +30,10 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
     }),
     prisma.driveAccount.findUnique({ where: { photographerId: photographer.id } }),
   ]);
+
+  const connectedEmail = driveAccount
+    ? await getConnectedAccountEmail(photographer.id).catch(() => null)
+    : null;
 
   return (
     <main className="flex-1 px-6 py-10">
@@ -76,6 +82,26 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
             </a>
           </div>
         </section>
+
+        {driveAccount && (
+          <section className="mt-8 rounded-2xl border border-border bg-surface p-6">
+            <h2 className="font-heading text-lg font-medium text-foreground">
+              Folder Tujuan Hasil Seleksi
+            </h2>
+            <p className="mt-1 text-sm text-muted">
+              Opsional. Boleh diisi link folder Drive dari akun mana pun
+              (folder klien, folder tim, dll) — tidak harus folder sumber
+              foto sesi.
+            </p>
+            <DriveDestinationForm
+              connectedEmail={connectedEmail}
+              initialLink={driveAccount.resultFolderLink}
+              initialFolderName={driveAccount.resultFolderName}
+              initialError={driveAccount.resultFolderError}
+              initialCheckedAt={driveAccount.resultFolderCheckedAt?.toISOString() ?? null}
+            />
+          </section>
+        )}
 
         <section className="mt-8 rounded-2xl border border-border bg-surface p-6">
           <h2 className="font-heading text-lg font-medium text-foreground">
