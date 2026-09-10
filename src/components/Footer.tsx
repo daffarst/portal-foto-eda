@@ -74,20 +74,6 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-
-          <div>
-            <p className="mb-3 font-medium text-foreground">Admin</p>
-            <ul className="space-y-2 text-muted">
-              <li>
-                <Link
-                  href="/admin"
-                  className="cursor-pointer transition-colors duration-200 hover:text-foreground"
-                >
-                  Login Fotografer
-                </Link>
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
 
