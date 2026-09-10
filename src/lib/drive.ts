@@ -58,6 +58,14 @@ async function getDriveClient(photographerId: string) {
   return google.drive({ version: "v3", auth: client });
 }
 
+export async function getConnectedAccountEmail(
+  photographerId: string
+): Promise<string | null> {
+  const drive = await getDriveClient(photographerId);
+  const res = await drive.about.get({ fields: "user" });
+  return res.data.user?.emailAddress ?? null;
+}
+
 export interface DrivePhoto {
   driveFileId: string;
   filename: string;
