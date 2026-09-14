@@ -30,10 +30,14 @@ const SERVICES = [
   },
 ];
 
+import fs from "fs";
+import path from "path";
+import HeroSlideshow from "./HeroSlideshow";
+
 const GALLERY_PREVIEW = [
-  { label: "Wedding \u2014 The Ritz-Carlton", src: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop", span: "md:col-span-2 md:row-span-2" },
-  { label: "Prewedding \u2014 Mount Bromo", src: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop", span: "md:col-span-1 md:row-span-1" },
-  { label: "Family Portrait", src: "https://images.unsplash.com/photo-1609220136736-443140cffec6?q=80&w=800&auto=format&fit=crop", span: "md:col-span-1 md:row-span-1" },
+  { label: "Prewedding", slug: "prewedding", fallback: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop", span: "md:col-span-2 md:row-span-2" },
+  { label: "Sangjit", slug: "sangjit", fallback: "https://images.unsplash.com/photo-1544591572-132d7319c5c7?q=80&w=800&auto=format&fit=crop", span: "md:col-span-1 md:row-span-1" },
+  { label: "Wedding", slug: "wedding", fallback: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop", span: "md:col-span-1 md:row-span-1" },
 ];
 
 const STEPS = [
@@ -56,6 +60,49 @@ const STEPS = [
 ];
 
 export default function HomePage() {
+  const galleryPreviews = GALLERY_PREVIEW.map((cat) => {
+    let src = cat.fallback;
+    try {
+      const dirPath = path.join(process.cwd(), "public", "images", "galeri", cat.slug);
+      if (fs.existsSync(dirPath)) {
+        const files = fs.readdirSync(dirPath);
+        const imageFiles = files.filter(file => /\.(jpg|jpeg|png|webp|gif)$/i.test(file));
+        if (imageFiles.length > 0) {
+          src = `/images/galeri/${cat.slug}/${imageFiles[0]}`;
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+    return { ...cat, src };
+  });
+
+  let slideshowImages: string[] = [];
+  try {
+    const galeriDir = path.join(process.cwd(), "public", "images", "galeri");
+    if (fs.existsSync(galeriDir)) {
+      const categories = fs.readdirSync(galeriDir);
+      for (const cat of categories) {
+        const catPath = path.join(galeriDir, cat);
+        if (fs.statSync(catPath).isDirectory()) {
+          const files = fs.readdirSync(catPath).filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f));
+          slideshowImages.push(...files.map(f => `/images/galeri/${cat}/${f}`));
+        }
+      }
+    }
+  } catch(e) {}
+  
+  if (slideshowImages.length === 0) {
+    slideshowImages = [
+      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1920&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1920&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1544591572-132d7319c5c7?q=80&w=1920&auto=format&fit=crop"
+    ];
+  } else {
+    // Shuffle and pick up to 10 images
+    slideshowImages = slideshowImages.sort(() => 0.5 - Math.random()).slice(0, 10);
+  }
+
   return (
     <>
       <Navbar />
@@ -63,11 +110,12 @@ export default function HomePage() {
       <main className="flex-1">
     {/* Hero Section */}
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 pt-20">
+      <HeroSlideshow images={slideshowImages} />
       <div
         aria-hidden
         className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(201,166,107,0.1),transparent_50%)]"
       />
-      <div className="relative mx-auto max-w-4xl text-center">
+      <div className="relative mx-auto max-w-4xl text-center z-10">
         <span className="inline-block rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-accent mb-6">
           Studio Foto Profesional
         </span>
@@ -147,10 +195,11 @@ export default function HomePage() {
         </div>
 
         <div className="grid auto-rows-[300px] grid-cols-1 md:grid-cols-3 gap-6">
-          {GALLERY_PREVIEW.map((item, index) => (
-            <div
+          {galleryPreviews.map((item, index) => (
+            <Link
+              href={`/galeri/${item.slug}`}
               key={index}
-              className={`group relative overflow-hidden rounded-3xl bg-surface-2 ${item.span}`}
+              className={`group relative overflow-hidden rounded-3xl bg-surface-2 block ${item.span}`}
             >
               <img
                 src={item.src}
@@ -163,7 +212,7 @@ export default function HomePage() {
                   {item.label}
                 </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         

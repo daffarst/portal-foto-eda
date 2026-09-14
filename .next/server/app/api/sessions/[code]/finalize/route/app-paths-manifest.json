@@ -1,0 +1,3 @@
+{
+  "/api/sessions/[code]/finalize/route": "app/api/sessions/[code]/finalize/route.js"
+}

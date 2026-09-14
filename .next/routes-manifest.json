@@ -1,0 +1,219 @@
+{
+  "version": 3,
+  "pages404": true,
+  "appType": "app",
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "onMatchHeaders": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/admin/sessions/[code]",
+      "regex": "^/admin/sessions/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPcode": "nxtPcode"
+      },
+      "namedRegex": "^/admin/sessions/(?<nxtPcode>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/sessions/[code]",
+      "regex": "^/api/sessions/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPcode": "nxtPcode"
+      },
+      "namedRegex": "^/api/sessions/(?<nxtPcode>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/sessions/[code]/finalize",
+      "regex": "^/api/sessions/([^/]+?)/finalize(?:/)?$",
+      "routeKeys": {
+        "nxtPcode": "nxtPcode"
+      },
+      "namedRegex": "^/api/sessions/(?<nxtPcode>[^/]+?)/finalize(?:/)?$"
+    },
+    {
+      "page": "/api/sessions/[code]/photos/[photoId]/download",
+      "regex": "^/api/sessions/([^/]+?)/photos/([^/]+?)/download(?:/)?$",
+      "routeKeys": {
+        "nxtPcode": "nxtPcode",
+        "nxtPphotoId": "nxtPphotoId"
+      },
+      "namedRegex": "^/api/sessions/(?<nxtPcode>[^/]+?)/photos/(?<nxtPphotoId>[^/]+?)/download(?:/)?$"
+    },
+    {
+      "page": "/api/sessions/[code]/select",
+      "regex": "^/api/sessions/([^/]+?)/select(?:/)?$",
+      "routeKeys": {
+        "nxtPcode": "nxtPcode"
+      },
+      "namedRegex": "^/api/sessions/(?<nxtPcode>[^/]+?)/select(?:/)?$"
+    },
+    {
+      "page": "/api/sessions/[code]/sync",
+      "regex": "^/api/sessions/([^/]+?)/sync(?:/)?$",
+      "routeKeys": {
+        "nxtPcode": "nxtPcode"
+      },
+      "namedRegex": "^/api/sessions/(?<nxtPcode>[^/]+?)/sync(?:/)?$"
+    },
+    {
+      "page": "/galeri/[category]",
+      "regex": "^/galeri/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPcategory": "nxtPcategory"
+      },
+      "namedRegex": "^/galeri/(?<nxtPcategory>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/portal/[code]",
+      "regex": "^/portal/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPcode": "nxtPcode"
+      },
+      "namedRegex": "^/portal/(?<nxtPcode>[^/]+?)(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/admin",
+      "regex": "^/admin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin(?:/)?$"
+    },
+    {
+      "page": "/admin/dashboard",
+      "regex": "^/admin/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/dashboard(?:/)?$"
+    },
+    {
+      "page": "/admin/register",
+      "regex": "^/admin/register(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/register(?:/)?$"
+    },
+    {
+      "page": "/api/auth/admin/login",
+      "regex": "^/api/auth/admin/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/admin/login(?:/)?$"
+    },
+    {
+      "page": "/api/auth/admin/logout",
+      "regex": "^/api/auth/admin/logout(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/admin/logout(?:/)?$"
+    },
+    {
+      "page": "/api/auth/admin/register",
+      "regex": "^/api/auth/admin/register(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/admin/register(?:/)?$"
+    },
+    {
+      "page": "/api/auth/google",
+      "regex": "^/api/auth/google(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/google(?:/)?$"
+    },
+    {
+      "page": "/api/auth/google/callback",
+      "regex": "^/api/auth/google/callback(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/google/callback(?:/)?$"
+    },
+    {
+      "page": "/api/drive/destination",
+      "regex": "^/api/drive/destination(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/drive/destination(?:/)?$"
+    },
+    {
+      "page": "/api/sessions",
+      "regex": "^/api/sessions(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/sessions(?:/)?$"
+    },
+    {
+      "page": "/favicon.ico",
+      "regex": "^/favicon\\.ico(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
+      "page": "/galeri",
+      "regex": "^/galeri(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/galeri(?:/)?$"
+    },
+    {
+      "page": "/kontak",
+      "regex": "^/kontak(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/kontak(?:/)?$"
+    },
+    {
+      "page": "/layanan",
+      "regex": "^/layanan(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/layanan(?:/)?$"
+    },
+    {
+      "page": "/portal",
+      "regex": "^/portal(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/portal(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}

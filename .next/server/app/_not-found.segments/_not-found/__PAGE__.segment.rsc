@@ -1,0 +1,23 @@
+1:"$Sreact.fragment"
+2:I[22016,["/_next/static/chunks/4367cc28851l3.js","/_next/static/chunks/32il_ptys_93h.js"],""]
+3:I[97367,["/_next/static/chunks/4367cc28851l3.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+8:I[97367,["/_next/static/chunks/4367cc28851l3.js"],"ViewportBoundary"]
+9:I[97367,["/_next/static/chunks/4367cc28851l3.js"],"MetadataBoundary"]
+a:I[27201,["/_next/static/chunks/4367cc28851l3.js"],"IconMark"]
+c:I[39756,["/_next/static/chunks/4367cc28851l3.js"],"default"]
+d:I[37457,["/_next/static/chunks/4367cc28851l3.js"],"default"]
+:HL["/_next/static/chunks/0gzjmm06ytk_s.css","style"]
+7:X
+f:X
+f:C
+0:{"buildId":"KxoDf3l6O5jOjTuXSfUR7","data":[{"rsc":["$","$1","c",{"children":[["$","main",null,{"className":"flex min-h-screen flex-1 flex-col items-center justify-center px-6 text-center","children":[["$","p",null,{"className":"font-heading text-6xl font-semibold text-accent","children":"404"}],["$","h1",null,{"className":"mt-4 font-heading text-xl font-medium text-foreground","children":"Halaman tidak ditemukan"}],["$","p",null,{"className":"mt-2 text-sm text-muted","children":"Periksa kembali kode sesi atau tautan yang Anda gunakan."}],["$","$L2",null,{"href":"/","className":"mt-8 cursor-pointer rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-accent-foreground transition-colors duration-200 hover:opacity-90","children":"Kembali ke beranda"}]]}],[["$","script","script-0",{"src":"/_next/static/chunks/32il_ptys_93h.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":"$@6","staleTime":"$7","varyParams":null},{"rsc":["$","$1","h",{"children":[["$","meta",null,{"name":"robots","content":"noindex"}],["$","$L8",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L9",null,{"children":["$","$4",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"IMAZING VISUAL — Studio Foto Profesional"}],["$","meta","1",{"name":"description","content":"Studio fotografi profesional untuk wedding, prewedding, dan potret keluarga. Seleksi foto hasil sesi Anda langsung lewat portal klien."}],["$","link","2",{"rel":"icon","href":"/favicon.ico?favicon.2vob68tjqpejf.ico","sizes":"256x256","type":"image/x-icon"}],["$","$La","3",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"isPartial":"$@b","staleTime":"$7","varyParams":null},{"rsc":["$","$1","c",{"children":[null,["$","$Lc",null,{"parallelRouterKey":"children","template":["$","$Ld",null,{}]}]]}],"isPartial":"$@e","staleTime":"$7","varyParams":"$f"},{"rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/0gzjmm06ytk_s.css","precedence":"next"}],["$","script","script-0",{"src":"/_next/static/chunks/4367cc28851l3.js","async":true}]],["$","html",null,{"lang":"id","className":"poppins_39de20a3-module__8LurOG__variable open_sans_3701e75b-module__WgIpXG__variable h-full antialiased","children":["$","body",null,{"className":"min-h-full flex flex-col bg-background text-foreground","children":["$","$Lc",null,{"parallelRouterKey":"children","template":["$","$Ld",null,{}],"notFound":[["$","main",null,{"className":"flex min-h-screen flex-1 flex-col items-center justify-center px-6 text-center","children":[["$","p",null,{"className":"font-heading text-6xl font-semibold text-accent","children":"404"}],["$","h1",null,{"className":"mt-4 font-heading text-xl font-medium text-foreground","children":"Halaman tidak ditemukan"}],["$","p",null,{"className":"mt-2 text-sm text-muted","children":"Periksa kembali kode sesi atau tautan yang Anda gunakan."}],["$","$L2",null,{"href":"/","className":"mt-8 cursor-pointer rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-accent-foreground transition-colors duration-200 hover:opacity-90","children":"Kembali ke beranda"}]]}],[]]}]}]}]]}],"isPartial":"$@10","staleTime":"$7","varyParams":null}],"isUpgradeableISRFallback":false,"a":"$@11","rootVaryParams":null,"needsRuntimeRequest":"$@12"}
+5:null
+7:300
+12:true
+7:C
+11:0
+b:"$undefined"
+e:"$undefined"
+10:"$undefined"
+6:"$undefined"

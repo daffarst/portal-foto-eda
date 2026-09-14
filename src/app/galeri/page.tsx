@@ -8,18 +8,39 @@ export const metadata: Metadata = {
   description: "Kumpulan karya dari sesi wedding, prewedding, potret keluarga, dan event.",
 };
 
-const GALLERY_PLACEHOLDER = [
-  { label: "Wedding \u2014 The Ritz-Carlton", src: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop" },
-  { label: "Prewedding \u2014 Outdoor", src: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop" },
-  { label: "Potret Keluarga", src: "https://images.unsplash.com/photo-1609220136736-443140cffec6?q=80&w=800&auto=format&fit=crop" },
-  { label: "Event Korporat", src: "https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=800&auto=format&fit=crop" },
-  { label: "Wedding \u2014 Golden Hour", src: "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=800&auto=format&fit=crop" },
-  { label: "Prewedding \u2014 Studio", src: "https://images.unsplash.com/photo-1525258946800-98ffdddc2165?q=80&w=800&auto=format&fit=crop" },
-  { label: "Potret Keluarga \u2014 Outdoor", src: "https://images.unsplash.com/photo-1581022295087-35e5d32c1c69?q=80&w=800&auto=format&fit=crop" },
-  { label: "Wedding \u2014 Resepsi", src: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop" },
+import Link from "next/link";
+
+import fs from "fs";
+import path from "path";
+
+const CATEGORIES = [
+  { label: "Prewedding", slug: "prewedding", fallback: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop" },
+  { label: "Sangjit", slug: "sangjit", fallback: "https://images.unsplash.com/photo-1544591572-132d7319c5c7?q=80&w=800&auto=format&fit=crop" }, 
+  { label: "Pemberkatan", slug: "pemberkatan", fallback: "https://images.unsplash.com/photo-1522060377042-78d103194a2f?q=80&w=800&auto=format&fit=crop" },
+  { label: "Wedding", slug: "wedding", fallback: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop" },
+  { label: "Maternity", slug: "maternity", fallback: "https://images.unsplash.com/photo-1527814766155-2287c2fb2d35?q=80&w=800&auto=format&fit=crop" },
+  { label: "Birthday", slug: "birthday", fallback: "https://images.unsplash.com/photo-1530103862676-de8892b12a15?q=80&w=800&auto=format&fit=crop" },
+  { label: "Graduation", slug: "graduation", fallback: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800&auto=format&fit=crop" },
 ];
 
 export default function GaleriPage() {
+  const galleryCategories = CATEGORIES.map((cat) => {
+    let src = cat.fallback;
+    try {
+      const dirPath = path.join(process.cwd(), "public", "images", "galeri", cat.slug);
+      if (fs.existsSync(dirPath)) {
+        const files = fs.readdirSync(dirPath);
+        const imageFiles = files.filter(file => /\.(jpg|jpeg|png|webp|gif)$/i.test(file));
+        if (imageFiles.length > 0) {
+          src = `/images/galeri/${cat.slug}/${imageFiles[0]}`;
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+    
+    return { ...cat, src };
+  });
   return (
     <>
       <Navbar />
@@ -39,12 +60,12 @@ export default function GaleriPage() {
             </div>
           </div>
 
-          {/* Masonry Layout for Gallery */}
           <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
-            {GALLERY_PLACEHOLDER.map((item, index) => (
-              <div
+            {galleryCategories.map((item, index) => (
+              <Link
+                href={`/galeri/${item.slug}`}
                 key={index}
-                className="group relative w-full break-inside-avoid overflow-hidden rounded-3xl bg-surface-2"
+                className="group relative w-full break-inside-avoid overflow-hidden rounded-3xl bg-surface-2 block"
               >
                 <img
                   src={item.src}
@@ -67,7 +88,7 @@ export default function GaleriPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 

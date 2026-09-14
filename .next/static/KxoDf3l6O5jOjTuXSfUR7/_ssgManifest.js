@@ -1,0 +1,1 @@
+self.__SSG_MANIFEST=new Set(["\u002Fgaleri\u002F[category]"]);self.__SSG_MANIFEST_CB&&self.__SSG_MANIFEST_CB()

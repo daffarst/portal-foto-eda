@@ -1,0 +1,13 @@
+var R=require("../../../chunks/ssr/[turbopack]_runtime.js")("server/app/galeri/[category]/page.js")
+R.c("server/chunks/ssr/[root-of-the-server]__1z3is35._.js")
+R.c("server/chunks/ssr/node_modules_next_dist_1n3w9lb._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__005e7nr._.js")
+R.c("server/chunks/ssr/node_modules_next_dist_096vqqs._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__16umf68._.js")
+R.c("server/chunks/ssr/_0qptkf4._.js")
+R.c("server/chunks/ssr/node_modules_next_dist_client_components_0p8s4lh._.js")
+R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_unauthorized_0l_sp0x.js")
+R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_global-error_0q-w892.js")
+R.c("server/chunks/ssr/_next-internal_server_app_galeri_[category]_page_actions_01jfacz.js")
+R.m(9288)
+module.exports=R.m(9288).exports
