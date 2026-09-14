@@ -441,6 +441,10 @@
     top: calc(var(--spacing) * 6);
   }
 
+  .top-\[calc\(100\%\+0\.5rem\)\] {
+    top: calc(100% + .5rem);
+  }
+
   .right-0 {
     right: 0;
   }
@@ -810,6 +814,10 @@
 
   .cursor-pointer {
     cursor: pointer;
+  }
+
+  .scroll-mt-24 {
+    scroll-margin-top: calc(var(--spacing) * 24);
   }
 
   .columns-1 {
@@ -1332,6 +1340,10 @@
 
   .object-cover {
     object-fit: cover;
+  }
+
+  .p-1 {
+    padding: var(--spacing);
   }
 
   .p-2 {
@@ -2142,8 +2154,16 @@
       margin-inline: 0;
     }
 
+    .md\:block {
+      display: block;
+    }
+
     .md\:flex {
       display: flex;
+    }
+
+    .md\:hidden {
+      display: none;
     }
 
     .md\:grid-cols-2 {

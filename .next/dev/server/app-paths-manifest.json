@@ -1,6 +1,4 @@
 {
-  "/galeri/[category]/page": "app/galeri/[category]/page.js",
-  "/galeri/page": "app/galeri/page.js",
   "/layanan/page": "app/layanan/page.js",
   "/page": "app/page.js"
 }

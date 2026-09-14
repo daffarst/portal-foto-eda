@@ -1,1 +1,11 @@
-{"version":4,"routes":{"/galeri/prewedding":{},"/galeri/sangjit":{},"/galeri/pemberkatan":{},"/galeri/wedding":{},"/galeri/maternity":{},"/galeri/birthday":{},"/galeri/graduation":{}},"dynamicRoutes":{"/galeri/[category]":{"dataRoute":null,"dataRouteRegex":null,"fallback":null,"fallbackRevalidate":false,"fallbackSourceRoute":"/galeri/[category]","routeRegex":"^\\/galeri\\/([^/]+?)(?:\\/)?$","allowHeader":[]}},"notFoundRoutes":[],"preview":{"previewModeId":"ded8f8a94cf013484397bf4843ee9560","previewModeSigningKey":"480c94edd8a8ba043d88a6e216756c70d627f0357f2781b044c33d07a6664115","previewModeEncryptionKey":"5bcbbb2a5bf0d8497e755c7693d29c0f3ea9f2bcb78d2a598aa40b2f73840811"}}
+{
+  "version": 4,
+  "routes": {},
+  "dynamicRoutes": {},
+  "notFoundRoutes": [],
+  "preview": {
+    "previewModeId": "c93ef3b89d7caf48fcaeb8e579fa193c",
+    "previewModeSigningKey": "324e241bba31000325cf2da55c6d8cb0db183e7b29930222e4f56d5f51cb000d",
+    "previewModeEncryptionKey": "8723a94ea051bcc0d519fd5e515aa5decc6c74f24454b4c5bcf61b094497718f"
+  }
+}

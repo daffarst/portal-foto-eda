@@ -5,26 +5,32 @@ import { Camera, Image as ImageIcon, CheckCircle, FolderHeart, ArrowRight } from
 
 const SERVICES = [
   {
+    id: "all-in-package",
     title: "ALL-IN PACKAGE",
     description: "Prewedding-Sangjit-Holy Matrimony-Wedding Day.",
   },
   {
+    id: "prewedding",
     title: "Prewedding",
     description: "Sesi foto berkonsep untuk menceritakan kisah Anda berdua.",
   },
   {
+    id: "simplicity",
     title: "simplycity indoor Sessions",
     description: "simplycity indoor Sessions",
   },
   {
+    id: "before-wedding",
     title: "before wedding ",
     description: "Engagment-Sangjit-Holy Matrimony",
   },
   {
+    id: "wedding-day",
     title: "Wedding Day Collections",
     description: "wedding day documentation (exclude Sangjit & Holy Matrimony)",
   },
   {
+    id: "extra",
     title: "Extra",
     description: "extra items exclude in the package",
   },
@@ -162,20 +168,21 @@ export default function HomePage() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((service, index) => {
             return (
-              <div
+              <Link
+                href={`/layanan#${service.id}`}
                 key={index}
-                className="group rounded-3xl border border-border bg-surface p-8 transition-all duration-300 hover:-translate-y-2 hover:border-accent/40 hover:shadow-2xl hover:shadow-accent/5"
+                className="group block rounded-3xl border border-border bg-surface p-8 transition-all duration-300 hover:-translate-y-2 hover:border-accent/40 hover:shadow-2xl hover:shadow-accent/5 cursor-pointer"
               >
                 <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-surface-2 text-foreground transition-colors group-hover:bg-accent group-hover:text-accent-foreground">
                   <Camera className="h-6 w-6" strokeWidth={1.5} />
                 </div>
-                <h3 className="font-heading text-xl font-semibold text-foreground mb-3">
+                <h3 className="font-heading text-xl font-semibold text-foreground mb-3 group-hover:text-accent transition-colors">
                   {service.title}
                 </h3>
                 <p className="text-sm leading-relaxed text-muted">
                   {service.description}
                 </p>
-              </div>
+              </Link>
             );
           })}
         </div>

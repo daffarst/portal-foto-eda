@@ -55,6 +55,7 @@ const metadata = {
 };
 const SERVICES = [
     {
+        id: "all-in-package",
         title: "ALL-IN PACKAGE",
         icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$heart$2d$handshake$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$export__default__as__HeartHandshake$3e$__["HeartHandshake"],
         description: "Prewedding-Sangjit-Holy Matrimony-Wedding Day.",
@@ -85,6 +86,7 @@ const SERVICES = [
         ]
     },
     {
+        id: "prewedding",
         title: "Prewedding",
         icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$heart$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$export__default__as__Heart$3e$__["Heart"],
         description: "Sesi foto berkonsep untuk menceritakan kisah Anda berdua.",
@@ -169,6 +171,7 @@ const SERVICES = [
         ]
     },
     {
+        id: "simplicity",
         title: "simplycity indoor Sessions",
         icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$camera$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$export__default__as__Camera$3e$__["Camera"],
         description: "simplycity indoor Sessions",
@@ -185,6 +188,7 @@ const SERVICES = [
         ]
     },
     {
+        id: "before-wedding",
         title: "before wedding ",
         icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$church$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$export__default__as__Church$3e$__["Church"],
         description: "Engagment-Sangjit-Holy Matrimony",
@@ -223,6 +227,7 @@ const SERVICES = [
         ]
     },
     {
+        id: "wedding-day",
         title: "Wedding Day Collections",
         icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$aperture$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$export__default__as__Aperture$3e$__["Aperture"],
         description: "wedding day documentation (exclude Sangjit & Holy Matrimony)",
@@ -265,6 +270,7 @@ const SERVICES = [
         ]
     },
     {
+        id: "extra",
         title: "Extra Items",
         icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$package$2d$plus$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$export__default__as__PackagePlus$3e$__["PackagePlus"],
         description: "extra services exclude in the package",
@@ -286,7 +292,7 @@ function LayananPage() {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Navbar$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/src/app/layanan/page.tsx",
-                lineNumber: 140,
+                lineNumber: 146,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -302,7 +308,7 @@ function LayananPage() {
                                     children: "Layanan Spesialis"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/layanan/page.tsx",
-                                    lineNumber: 144,
+                                    lineNumber: 150,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -310,7 +316,7 @@ function LayananPage() {
                                     children: "Paket Fotografi"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/layanan/page.tsx",
-                                    lineNumber: 147,
+                                    lineNumber: 153,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -318,13 +324,13 @@ function LayananPage() {
                                     children: "Kami merancang setiap paket untuk memastikan momen Anda ditangkap dengan dedikasi, kualitas premium, dan alur kerja yang mudah."
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/layanan/page.tsx",
-                                    lineNumber: 150,
+                                    lineNumber: 156,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/layanan/page.tsx",
-                            lineNumber: 143,
+                            lineNumber: 149,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -332,7 +338,8 @@ function LayananPage() {
                             children: SERVICES.map((service)=>{
                                 const Icon = service.icon;
                                 return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "group relative flex flex-col justify-between overflow-hidden rounded-[2.5rem] border border-border bg-surface p-10 transition-all duration-300 hover:-translate-y-2 hover:border-accent/40 hover:shadow-2xl hover:shadow-accent/5",
+                                    id: service.id,
+                                    className: "group relative flex flex-col justify-between overflow-hidden rounded-[2.5rem] border border-border bg-surface p-10 transition-all duration-300 hover:-translate-y-2 hover:border-accent/40 hover:shadow-2xl hover:shadow-accent/5 scroll-mt-24",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "absolute top-0 right-0 p-8 opacity-5 text-foreground transition-opacity group-hover:opacity-10 group-hover:text-accent",
@@ -340,12 +347,12 @@ function LayananPage() {
                                                 className: "h-32 w-32"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/layanan/page.tsx",
-                                                lineNumber: 165,
+                                                lineNumber: 172,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/layanan/page.tsx",
-                                            lineNumber: 164,
+                                            lineNumber: 171,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -358,12 +365,12 @@ function LayananPage() {
                                                         strokeWidth: 1.5
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/layanan/page.tsx",
-                                                        lineNumber: 170,
+                                                        lineNumber: 177,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/layanan/page.tsx",
-                                                    lineNumber: 169,
+                                                    lineNumber: 176,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -371,7 +378,7 @@ function LayananPage() {
                                                     children: service.title
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/layanan/page.tsx",
-                                                    lineNumber: 172,
+                                                    lineNumber: 179,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -379,7 +386,7 @@ function LayananPage() {
                                                     children: service.description
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/layanan/page.tsx",
-                                                    lineNumber: 175,
+                                                    lineNumber: 182,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -392,7 +399,7 @@ function LayananPage() {
                                                                     children: pkg.title
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/layanan/page.tsx",
-                                                                    lineNumber: 183,
+                                                                    lineNumber: 190,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -400,7 +407,7 @@ function LayananPage() {
                                                                     children: pkg.description
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/layanan/page.tsx",
-                                                                    lineNumber: 184,
+                                                                    lineNumber: 191,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -412,48 +419,48 @@ function LayananPage() {
                                                                                     className: "h-4 w-4 text-accent shrink-0"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/layanan/page.tsx",
-                                                                                    lineNumber: 191,
+                                                                                    lineNumber: 198,
                                                                                     columnNumber: 29
                                                                                 }, this),
                                                                                 point
                                                                             ]
                                                                         }, pointIndex, true, {
                                                                             fileName: "[project]/src/app/layanan/page.tsx",
-                                                                            lineNumber: 187,
+                                                                            lineNumber: 194,
                                                                             columnNumber: 27
                                                                         }, this))
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/layanan/page.tsx",
-                                                                    lineNumber: 185,
+                                                                    lineNumber: 192,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, pkgIndex, true, {
                                                             fileName: "[project]/src/app/layanan/page.tsx",
-                                                            lineNumber: 182,
+                                                            lineNumber: 189,
                                                             columnNumber: 21
                                                         }, this))
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/layanan/page.tsx",
-                                                    lineNumber: 180,
+                                                    lineNumber: 187,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/layanan/page.tsx",
-                                            lineNumber: 168,
+                                            lineNumber: 175,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, service.title, true, {
                                     fileName: "[project]/src/app/layanan/page.tsx",
-                                    lineNumber: 160,
+                                    lineNumber: 166,
                                     columnNumber: 13
                                 }, this);
                             })
                         }, void 0, false, {
                             fileName: "[project]/src/app/layanan/page.tsx",
-                            lineNumber: 156,
+                            lineNumber: 162,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -463,7 +470,7 @@ function LayananPage() {
                                     className: "absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(201,166,107,0.1),transparent_60%)]"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/layanan/page.tsx",
-                                    lineNumber: 206,
+                                    lineNumber: 213,
                                     columnNumber: 9
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -474,7 +481,7 @@ function LayananPage() {
                                             children: "Miliki Cerita Anda Sendiri"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/layanan/page.tsx",
-                                            lineNumber: 208,
+                                            lineNumber: 215,
                                             columnNumber: 11
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -482,7 +489,7 @@ function LayananPage() {
                                             children: "Punya konsep unik yang ingin diwujudkan? Atau ingin menyesuaikan paket dengan kebutuhan spesifik Anda?"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/layanan/page.tsx",
-                                            lineNumber: 211,
+                                            lineNumber: 218,
                                             columnNumber: 11
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$react$2d$server$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {
@@ -494,47 +501,47 @@ function LayananPage() {
                                                     className: "h-4 w-4 transition-transform group-hover:translate-x-1"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/layanan/page.tsx",
-                                                    lineNumber: 220,
+                                                    lineNumber: 227,
                                                     columnNumber: 13
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/layanan/page.tsx",
-                                            lineNumber: 215,
+                                            lineNumber: 222,
                                             columnNumber: 11
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/layanan/page.tsx",
-                                    lineNumber: 207,
+                                    lineNumber: 214,
                                     columnNumber: 9
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/layanan/page.tsx",
-                            lineNumber: 205,
+                            lineNumber: 212,
                             columnNumber: 7
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/layanan/page.tsx",
-                    lineNumber: 142,
+                    lineNumber: 148,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/layanan/page.tsx",
-                lineNumber: 141,
+                lineNumber: 147,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Footer$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/src/app/layanan/page.tsx",
-                lineNumber: 226,
+                lineNumber: 233,
                 columnNumber: 3
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/layanan/page.tsx",
-        lineNumber: 139,
+        lineNumber: 145,
         columnNumber: 5
     }, this);
 }

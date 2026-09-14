@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 
 const SERVICES = [
   {
+    id: "all-in-package",
     title: "ALL-IN PACKAGE",
     icon: HeartHandshake,
     description: "Prewedding-Sangjit-Holy Matrimony-Wedding Day.",
@@ -28,6 +29,7 @@ const SERVICES = [
     ],
   },
   {
+    id: "prewedding",
     title: "Prewedding",
     icon: Heart,
     description: "Sesi foto berkonsep untuk menceritakan kisah Anda berdua.",
@@ -65,6 +67,7 @@ const SERVICES = [
     ],
   },
   {
+    id: "simplicity",
     title: "simplycity indoor Sessions",
     icon: Camera,
     description: "simplycity indoor Sessions",
@@ -77,6 +80,7 @@ const SERVICES = [
     ],
   },
   {
+    id: "before-wedding",
     title: "before wedding ",
     icon: Church,
     description: "Engagment-Sangjit-Holy Matrimony",
@@ -99,6 +103,7 @@ const SERVICES = [
     ],
   },
   {
+    id: "wedding-day",
     title: "Wedding Day Collections",
     icon: Aperture,
     description: "wedding day documentation (exclude Sangjit & Holy Matrimony)",
@@ -121,6 +126,7 @@ const SERVICES = [
     ],
   },
   {
+    id: "extra",
     title: "Extra Items",
     icon: PackagePlus,
     description: "extra services exclude in the package",
@@ -158,8 +164,9 @@ export default function LayananPage() {
           const Icon = service.icon;
           return (
             <div
+              id={service.id}
               key={service.title}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-[2.5rem] border border-border bg-surface p-10 transition-all duration-300 hover:-translate-y-2 hover:border-accent/40 hover:shadow-2xl hover:shadow-accent/5"
+              className="group relative flex flex-col justify-between overflow-hidden rounded-[2.5rem] border border-border bg-surface p-10 transition-all duration-300 hover:-translate-y-2 hover:border-accent/40 hover:shadow-2xl hover:shadow-accent/5 scroll-mt-24"
             >
               <div className="absolute top-0 right-0 p-8 opacity-5 text-foreground transition-opacity group-hover:opacity-10 group-hover:text-accent">
                 <Icon className="h-32 w-32" />
