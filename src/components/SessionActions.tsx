@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { readJsonResponse } from "@/lib/http";
 
 interface SessionActionsProps {
   sessionCode: string;
@@ -26,13 +27,31 @@ export default function SessionActions({
     setError(null);
     setMessage(null);
     try {
-      const res = await fetch(`/api/sessions/${sessionCode}/sync`, { method: "POST" });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Gagal sync foto dari Drive.");
-      setMessage(`${data.syncedCount} foto berhasil disinkronkan.`);
+      let total = 0;
+      let pageToken: string | null = null;
+      // Sinkron per halaman (maks. 1000 foto/request) supaya ribuan foto tidak timeout.
+      do {
+        const res: Response = await fetch(`/api/sessions/${sessionCode}/sync`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pageToken }),
+        });
+        const data = await readJsonResponse<{ syncedCount: number; nextPageToken: string | null }>(
+          res,
+          "Gagal sync foto dari Drive."
+        );
+        total += data.syncedCount;
+        pageToken = data.nextPageToken;
+        setMessage(
+          pageToken
+            ? `Menyinkronkan... ${total} foto sudah diproses.`
+            : `${total} foto berhasil disinkronkan.`
+        );
+      } while (pageToken);
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal sync.");
+      router.refresh();
     } finally {
       setIsSyncing(false);
     }
@@ -48,8 +67,10 @@ export default function SessionActions({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mode }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Gagal memproses folder hasil seleksi.");
+      const data = await readJsonResponse<{ copiedCount: number }>(
+        res,
+        "Gagal memproses folder hasil seleksi."
+      );
       setMessage(`${data.copiedCount} foto berhasil diproses ke folder Hasil Seleksi.`);
       router.refresh();
     } catch (err) {

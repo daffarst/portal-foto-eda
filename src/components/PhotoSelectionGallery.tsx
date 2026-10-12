@@ -1,8 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CheckCircle2, Loader2, Save, FolderHeart, ZoomIn } from "lucide-react";
 import PhotoLightbox from "@/components/PhotoLightbox";
+import ResilientImage from "@/components/ResilientImage";
+import { readJsonResponse } from "@/lib/http";
+import { upsizeDriveThumbnail } from "@/lib/utils";
+
+const PAGE_SIZE = 60;
+const GRID_THUMB_SIZE = 480;
 
 interface Photo {
   id: string;
@@ -43,6 +49,25 @@ export default function PhotoSelectionGallery({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [limitMessage, setLimitMessage] = useState<string | null>(null);
   const [previewPhoto, setPreviewPhoto] = useState<Photo | null>(null);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  // Render foto bertahap saat scroll supaya ribuan foto tidak membebani browser.
+  const hasMore = visibleCount < photos.length;
+  useEffect(() => {
+    const node = sentinelRef.current;
+    if (!node || !hasMore) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setVisibleCount((count) => count + PAGE_SIZE);
+        }
+      },
+      { rootMargin: "800px 0px" }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [hasMore, visibleCount]);
 
   const isDirty = useMemo(() => {
     if (selectedIds.size !== initialSelectedIds.length) return true;
@@ -75,8 +100,7 @@ export default function PhotoSelectionGallery({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ photoIds: Array.from(selectedIds) }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Gagal menyimpan seleksi.");
+      await readJsonResponse(res, "Gagal menyimpan seleksi.");
       setSubmitState("saved");
     } catch (err) {
       setSubmitState("error");
@@ -134,13 +158,14 @@ export default function PhotoSelectionGallery({
             </p>
           </div>
         ) : (
-          <div className="columns-2 gap-4 sm:columns-3 lg:columns-4 space-y-4">
-            {photos.map((photo) => {
+          <>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+            {photos.slice(0, visibleCount).map((photo) => {
               const isSelected = selectedIds.has(photo.id);
               return (
                 <div
                   key={photo.id}
-                  className={`group relative w-full break-inside-avoid overflow-hidden rounded-2xl bg-surface transition-all duration-300 ${
+                  className={`group relative w-full overflow-hidden rounded-2xl bg-surface transition-all duration-300 ${
                     isSelected ? "ring-2 ring-accent ring-offset-2 ring-offset-background" : "hover:ring-2 hover:ring-accent/50 hover:ring-offset-2 hover:ring-offset-background"
                   }`}
                 >
@@ -150,20 +175,14 @@ export default function PhotoSelectionGallery({
                     disabled={isLocked}
                     aria-pressed={isSelected}
                     aria-label={`Pilih ${photo.filename}`}
-                    className="block w-full disabled:cursor-not-allowed"
+                    className="block aspect-[4/3] w-full disabled:cursor-not-allowed"
                   >
-                    {photo.thumbnailUrl ? (
-                      <img
-                        src={photo.thumbnailUrl}
-                        alt={photo.filename}
-                        className="w-full h-auto object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="flex aspect-video w-full items-center justify-center p-4 text-center text-xs text-muted bg-surface-2">
-                        {photo.filename}
-                      </div>
-                    )}
+                    <ResilientImage
+                      src={photo.thumbnailUrl ? upsizeDriveThumbnail(photo.thumbnailUrl, GRID_THUMB_SIZE) : null}
+                      fallbackSrc={`/api/sessions/${sessionCode}/photos/${photo.id}/thumbnail?size=${GRID_THUMB_SIZE}`}
+                      alt={photo.filename}
+                      className="h-full w-full bg-surface-2 object-cover"
+                    />
 
                     {/* Hover Overlay */}
                     <div className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${isSelected ? "opacity-20" : "opacity-0 group-hover:opacity-100"}`} />
@@ -201,6 +220,13 @@ export default function PhotoSelectionGallery({
               );
             })}
           </div>
+          {hasMore && (
+            <div ref={sentinelRef} className="flex justify-center py-10 text-sm text-muted">
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Memuat foto lainnya ({visibleCount} dari {photos.length})
+            </div>
+          )}
+          </>
         )}
       </div>
 

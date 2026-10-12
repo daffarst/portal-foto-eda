@@ -1,7 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import ResilientImage from "@/components/ResilientImage";
 import { upsizeDriveThumbnail } from "@/lib/utils";
+
+const PREVIEW_SIZE = 2000;
 
 interface PhotoLightboxProps {
   sessionCode: string;
@@ -10,6 +13,7 @@ interface PhotoLightboxProps {
 }
 
 export default function PhotoLightbox({ sessionCode, photo, onClose }: PhotoLightboxProps) {
+  const [isHiResLoaded, setIsHiResLoaded] = useState(false);
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") onClose();
@@ -19,6 +23,7 @@ export default function PhotoLightbox({ sessionCode, photo, onClose }: PhotoLigh
   }, [onClose]);
 
   const downloadUrl = `/api/sessions/${sessionCode}/photos/${photo.id}/download`;
+  const thumbnailEndpoint = `/api/sessions/${sessionCode}/photos/${photo.id}/thumbnail`;
 
   return (
     <div
@@ -42,12 +47,26 @@ export default function PhotoLightbox({ sessionCode, photo, onClose }: PhotoLigh
         onClick={(e) => e.stopPropagation()}
       >
         {photo.thumbnailUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element -- ukuran asli tidak diketahui, biarkan browser hitung sendiri
-          <img
-            src={upsizeDriveThumbnail(photo.thumbnailUrl)}
-            alt={photo.filename}
-            className="max-h-[80vh] w-auto rounded-lg object-contain"
-          />
+          <>
+            {/* Thumbnail kecil (sudah ter-cache dari grid) tampil dulu sampai versi besar selesai dimuat */}
+            {!isHiResLoaded && (
+              <ResilientImage
+                src={upsizeDriveThumbnail(photo.thumbnailUrl, 480)}
+                fallbackSrc={`${thumbnailEndpoint}?size=480`}
+                alt={photo.filename}
+                loading="eager"
+                className="max-h-[80vh] w-auto rounded-lg object-contain blur-[2px]"
+              />
+            )}
+            <ResilientImage
+              src={upsizeDriveThumbnail(photo.thumbnailUrl, PREVIEW_SIZE)}
+              fallbackSrc={`${thumbnailEndpoint}?size=${PREVIEW_SIZE}`}
+              alt={photo.filename}
+              loading="eager"
+              onLoad={() => setIsHiResLoaded(true)}
+              className={`max-h-[80vh] w-auto rounded-lg object-contain ${isHiResLoaded ? "" : "absolute opacity-0"}`}
+            />
+          </>
         ) : (
           <p className="text-sm text-white/70">{photo.filename}</p>
         )}

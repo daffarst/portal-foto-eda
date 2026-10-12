@@ -4,6 +4,8 @@ import { prisma } from "@/lib/db";
 import { requirePhotographer } from "@/lib/auth";
 import { ensureFolder, ensureResultFolder, copySelectedPhotos } from "@/lib/drive";
 
+export const maxDuration = 60;
+
 interface RouteParams {
   params: Promise<{ code: string }>;
 }

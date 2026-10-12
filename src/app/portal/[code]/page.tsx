@@ -13,7 +13,10 @@ export default async function PortalSessionPage({ params }: PageProps) {
   const session = await prisma.session.findUnique({
     where: { sessionCode },
     include: {
-      photos: { orderBy: { createdAt: "asc" } },
+      photos: {
+        select: { id: true, filename: true, thumbnailUrl: true },
+        orderBy: [{ createdAt: "asc" }, { filename: "asc" }],
+      },
       selections: { select: { photoId: true } },
     },
   });

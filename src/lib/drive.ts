@@ -67,37 +67,62 @@ export interface DrivePhoto {
   sizeBytes: number | null;
 }
 
-/** List semua foto (image/*) di sebuah folder Drive, tidak termasuk yang di-trash. */
-export async function listPhotosInFolder(
+export interface DrivePhotoPage {
+  photos: DrivePhoto[];
+  nextPageToken: string | null;
+}
+
+/**
+ * Ambil satu halaman (maks. 1000, batas Drive API) foto image/* di sebuah
+ * folder, tidak termasuk yang di-trash. Dipanggil berulang dengan
+ * `pageToken` supaya sync ribuan foto dipecah jadi request pendek dan
+ * tidak kena timeout serverless.
+ */
+export async function listPhotosPage(
   folderId: string,
-  photographerId: string
-): Promise<DrivePhoto[]> {
+  photographerId: string,
+  pageToken?: string
+): Promise<DrivePhotoPage> {
   const drive = await getDriveClient(photographerId);
+  const res = await drive.files.list({
+    q: `'${folderId}' in parents and mimeType contains 'image/' and trashed = false`,
+    fields: "nextPageToken, files(id, name, thumbnailLink, mimeType, size)",
+    orderBy: "name",
+    pageSize: 1000,
+    pageToken,
+    supportsAllDrives: true,
+    includeItemsFromAllDrives: true,
+  });
+
   const photos: DrivePhoto[] = [];
-  let pageToken: string | undefined;
-
-  do {
-    const res = await drive.files.list({
-      q: `'${folderId}' in parents and mimeType contains 'image/' and trashed = false`,
-      fields: "nextPageToken, files(id, name, thumbnailLink, mimeType, size)",
-      pageSize: 200,
-      pageToken,
+  for (const f of res.data.files ?? []) {
+    if (!f.id || !f.name) continue;
+    photos.push({
+      driveFileId: f.id,
+      filename: f.name,
+      thumbnailUrl: f.thumbnailLink ?? null,
+      mimeType: f.mimeType ?? null,
+      sizeBytes: f.size && Number(f.size) <= 2_147_483_647 ? Number(f.size) : null,
     });
+  }
+  return { photos, nextPageToken: res.data.nextPageToken ?? null };
+}
 
-    for (const f of res.data.files ?? []) {
-      if (!f.id || !f.name) continue;
-      photos.push({
-        driveFileId: f.id,
-        filename: f.name,
-        thumbnailUrl: f.thumbnailLink ?? null,
-        mimeType: f.mimeType ?? null,
-        sizeBytes: f.size ? Number(f.size) : null,
-      });
-    }
-    pageToken = res.data.nextPageToken ?? undefined;
-  } while (pageToken);
-
-  return photos;
+/**
+ * Ambil thumbnailLink terbaru sebuah file. Link yang tersimpan di database
+ * kedaluwarsa setelah beberapa jam, jadi dipakai sebagai fallback.
+ */
+export async function getFreshThumbnailLink(
+  fileId: string,
+  photographerId: string
+): Promise<string | null> {
+  const drive = await getDriveClient(photographerId);
+  const res = await drive.files.get({
+    fileId,
+    fields: "thumbnailLink",
+    supportsAllDrives: true,
+  });
+  return res.data.thumbnailLink ?? null;
 }
 
 /** Buat folder bernama `name` di dalam `parentFolderId` kalau belum ada (idempotent). */
@@ -204,28 +229,36 @@ export async function copySelectedPhotos(
   mode: CopyMode = "copy"
 ): Promise<{ driveFileId: string; newFileId: string }[]> {
   const drive = await getDriveClient(photographerId);
-  const results: { driveFileId: string; newFileId: string }[] = [];
+  const results: { driveFileId: string; newFileId: string }[] = new Array(driveFileIds.length);
+  const CONCURRENCY = 8;
 
-  for (const [index, fileId] of driveFileIds.entries()) {
-    if (mode === "shortcut") {
-      const shortcut = await drive.files.create({
-        requestBody: {
-          name: `${String(index + 1).padStart(2, "0")}_${fileId}`,
-          mimeType: "application/vnd.google-apps.shortcut",
-          shortcutDetails: { targetId: fileId },
-          parents: [targetFolderId],
-        },
-        fields: "id",
-      });
-      results.push({ driveFileId: fileId, newFileId: shortcut.data.id ?? "" });
-    } else {
-      const copy = await drive.files.copy({
-        fileId,
-        requestBody: { parents: [targetFolderId] },
-        fields: "id",
-      });
-      results.push({ driveFileId: fileId, newFileId: copy.data.id ?? "" });
-    }
+  // Beberapa request paralel supaya ratusan foto terpilih tidak diproses satu per satu.
+  for (let start = 0; start < driveFileIds.length; start += CONCURRENCY) {
+    const batch = driveFileIds.slice(start, start + CONCURRENCY);
+    await Promise.all(
+      batch.map(async (fileId, offset) => {
+        const index = start + offset;
+        if (mode === "shortcut") {
+          const shortcut = await drive.files.create({
+            requestBody: {
+              name: `${String(index + 1).padStart(2, "0")}_${fileId}`,
+              mimeType: "application/vnd.google-apps.shortcut",
+              shortcutDetails: { targetId: fileId },
+              parents: [targetFolderId],
+            },
+            fields: "id",
+          });
+          results[index] = { driveFileId: fileId, newFileId: shortcut.data.id ?? "" };
+        } else {
+          const copy = await drive.files.copy({
+            fileId,
+            requestBody: { parents: [targetFolderId] },
+            fields: "id",
+          });
+          results[index] = { driveFileId: fileId, newFileId: copy.data.id ?? "" };
+        }
+      })
+    );
   }
 
   return results;
@@ -234,6 +267,7 @@ export async function copySelectedPhotos(
 export interface DriveFileStream {
   stream: Readable;
   mimeType: string;
+  sizeBytes: number | null;
 }
 
 /**
@@ -247,14 +281,17 @@ export async function downloadFile(
 ): Promise<DriveFileStream> {
   const drive = await getDriveClient(photographerId);
 
-  const meta = await drive.files.get({ fileId, fields: "mimeType" });
-  const file = await drive.files.get(
-    { fileId, alt: "media" },
-    { responseType: "stream" }
-  );
+  const [meta, file] = await Promise.all([
+    drive.files.get({ fileId, fields: "mimeType, size", supportsAllDrives: true }),
+    drive.files.get(
+      { fileId, alt: "media", supportsAllDrives: true },
+      { responseType: "stream" }
+    ),
+  ]);
 
   return {
     stream: file.data as unknown as Readable,
     mimeType: meta.data.mimeType ?? "application/octet-stream",
+    sizeBytes: meta.data.size ? Number(meta.data.size) : null,
   };
 }
