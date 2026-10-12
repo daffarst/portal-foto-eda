@@ -184,23 +184,23 @@ export default function PhotoSelectionGallery({
                       className="h-full w-full bg-surface-2 object-cover"
                     />
 
-                    {/* Hover Overlay */}
-                    <div className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${isSelected ? "opacity-20" : "opacity-0 group-hover:opacity-100"}`} />
+                    {/* Overlay gelap hanya saat hover (perangkat dengan mouse) */}
+                    <div className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${isSelected ? "opacity-20" : "opacity-0 [@media(hover:hover)]:group-hover:opacity-100"}`} />
 
-                    {/* Checkmark Indicator */}
+                    {/* Indikator pilih: selalu tampil di mobile/layar sentuh, hover di desktop */}
                     <div
-                      className={`absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 transform ${
+                      className={`absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 transform ${
                         isSelected
                           ? "bg-accent text-accent-foreground scale-100 opacity-100"
-                          : "bg-black/50 text-white/70 opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 backdrop-blur-sm border border-white/20"
+                          : "bg-black/60 text-white border border-white/40 backdrop-blur-sm opacity-100 scale-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:scale-75 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:scale-100"
                       }`}
                       aria-hidden
                     >
                       <CheckCircle2 className="h-5 w-5" strokeWidth={2.5} />
                     </div>
 
-                    {/* Filename on hover */}
-                    <div className="absolute bottom-0 left-0 w-full p-4 translate-y-full bg-gradient-to-t from-black/80 to-transparent transition-transform duration-300 group-hover:translate-y-0">
+                    {/* Nama file saat hover */}
+                    <div className="absolute bottom-0 left-0 hidden w-full p-4 translate-y-full bg-gradient-to-t from-black/80 to-transparent transition-transform duration-300 [@media(hover:hover)]:block group-hover:translate-y-0">
                       <p className="text-xs text-white/90 truncate">{photo.filename}</p>
                     </div>
                   </button>
@@ -212,9 +212,9 @@ export default function PhotoSelectionGallery({
                       setPreviewPhoto(photo);
                     }}
                     aria-label={`Perbesar ${photo.filename}`}
-                    className="absolute left-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-black/50 text-white opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100"
+                    className="absolute left-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-black/60 text-white opacity-100 backdrop-blur-sm transition-opacity duration-300 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100"
                   >
-                    <ZoomIn className="h-4 w-4" strokeWidth={2} />
+                    <ZoomIn className="h-5 w-5" strokeWidth={2} />
                   </button>
                 </div>
               );
@@ -250,7 +250,7 @@ export default function PhotoSelectionGallery({
                   Foto Dipilih{maxSelections !== null ? ` (maks. ${maxSelections})` : ""}
                 </p>
                 <p className="text-xs text-muted">
-                  {limitMessage ?? "Klik foto untuk menambah/mengurangi"}
+                  {limitMessage ?? "Ketuk foto atau ikon centang untuk memilih · ikon kaca pembesar untuk memperbesar"}
                 </p>
               </div>
             </div>
