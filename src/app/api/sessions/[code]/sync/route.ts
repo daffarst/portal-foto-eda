@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requirePhotographer } from "@/lib/auth";
-import { listPhotosPage } from "@/lib/drive";
+import { listPhotosTree } from "@/lib/drive";
 
 export const maxDuration = 60;
 
@@ -11,11 +11,12 @@ interface RouteParams {
 
 /**
  * POST /api/sessions/:code/sync — fotografer pemilik sesi menarik daftar
- * foto dari folder Google Drive sumber, SATU HALAMAN (maks. 1000 foto) per
- * request, lalu di-upsert ke database dalam satu query massal (idempotent
- * by driveFileId, bukan by nama file). Client memanggil berulang dengan
- * `pageToken` dari respons sebelumnya sampai `nextPageToken` bernilai null,
- * sehingga ribuan foto tetap cepat dan tidak kena timeout.
+ * foto dari folder Google Drive sumber BESERTA semua subfolder-nya, dibaca
+ * bertahap (~500+ foto per request), lalu di-upsert ke database dalam satu
+ * query massal (idempotent by driveFileId, bukan by nama file). Client
+ * memanggil berulang dengan `cursor` dari respons sebelumnya sampai
+ * `nextCursor` bernilai null, sehingga ribuan foto tetap cepat dan tidak
+ * kena timeout.
  */
 export async function POST(request: Request, { params }: RouteParams) {
   const auth = await requirePhotographer();
@@ -34,14 +35,28 @@ export async function POST(request: Request, { params }: RouteParams) {
     return NextResponse.json({ error: "Tidak diizinkan." }, { status: 403 });
   }
 
-  const body = (await request.json().catch(() => null)) as { pageToken?: unknown } | null;
-  const pageToken = typeof body?.pageToken === "string" && body.pageToken ? body.pageToken : undefined;
+  const body = (await request.json().catch(() => null)) as { cursor?: unknown } | null;
+  const cursor = typeof body?.cursor === "string" && body.cursor ? body.cursor : undefined;
 
   try {
-    const page = await listPhotosPage(session.driveSourceFolderId, auth.photographer.id, pageToken);
+    const driveAccount = await prisma.driveAccount.findUnique({
+      where: { photographerId: auth.photographer.id },
+      select: { resultFolderId: true },
+    });
+    const skipFolderIds = [session.driveResultFolderId, driveAccount?.resultFolderId].filter(
+      (id): id is string => Boolean(id)
+    );
 
-    if (page.photos.length > 0) {
-      const rows = JSON.stringify(page.photos);
+    const page = await listPhotosTree(session.driveSourceFolderId, auth.photographer.id, {
+      cursor,
+      skipFolderIds,
+    });
+
+    // File yang punya beberapa parent bisa muncul dua kali; ON CONFLICT tidak boleh kena baris sama dalam satu query.
+    const uniquePhotos = [...new Map(page.photos.map((p) => [p.driveFileId, p])).values()];
+
+    if (uniquePhotos.length > 0) {
+      const rows = JSON.stringify(uniquePhotos);
       await prisma.$executeRaw`
         INSERT INTO "Photo" ("id", "sessionId", "driveFileId", "filename", "thumbnailUrl", "mimeType", "sizeBytes")
         SELECT gen_random_uuid()::text, ${session.id}, v."driveFileId", v."filename", v."thumbnailUrl", v."mimeType", v."sizeBytes"
@@ -61,8 +76,8 @@ export async function POST(request: Request, { params }: RouteParams) {
     }
 
     return NextResponse.json({
-      syncedCount: page.photos.length,
-      nextPageToken: page.nextPageToken,
+      syncedCount: uniquePhotos.length,
+      nextCursor: page.nextCursor,
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Gagal mengambil data dari Google Drive.";

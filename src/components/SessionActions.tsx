@@ -28,26 +28,26 @@ export default function SessionActions({
     setMessage(null);
     try {
       let total = 0;
-      let pageToken: string | null = null;
-      // Sinkron per halaman (maks. 1000 foto/request) supaya ribuan foto tidak timeout.
+      let cursor: string | null = null;
+      // Sinkron bertahap (folder + subfolder) supaya ribuan foto tidak timeout.
       do {
         const res: Response = await fetch(`/api/sessions/${sessionCode}/sync`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ pageToken }),
+          body: JSON.stringify({ cursor }),
         });
-        const data = await readJsonResponse<{ syncedCount: number; nextPageToken: string | null }>(
+        const data = await readJsonResponse<{ syncedCount: number; nextCursor: string | null }>(
           res,
           "Gagal sync foto dari Drive."
         );
         total += data.syncedCount;
-        pageToken = data.nextPageToken;
+        cursor = data.nextCursor;
         setMessage(
-          pageToken
+          cursor
             ? `Menyinkronkan... ${total} foto sudah diproses.`
             : `${total} foto berhasil disinkronkan.`
         );
-      } while (pageToken);
+      } while (cursor);
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal sync.");

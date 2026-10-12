@@ -69,43 +69,131 @@ export interface DrivePhoto {
 
 export interface DrivePhotoPage {
   photos: DrivePhoto[];
-  nextPageToken: string | null;
+  /** Cursor opaque untuk request berikutnya; null kalau seluruh pohon folder sudah selesai. */
+  nextCursor: string | null;
+}
+
+interface SyncCursor {
+  /** Antrean folder yang belum selesai dibaca; elemen pertama = folder yang sedang dibaca. */
+  queue: string[];
+  /** pageToken Drive untuk daftar foto di folder pertama pada antrean. */
+  pageToken?: string;
+}
+
+const DRIVE_ID_PATTERN = /^[A-Za-z0-9_-]{5,200}$/;
+const MAX_QUEUE_LENGTH = 5000;
+const FOLDER_MIME = "application/vnd.google-apps.folder";
+
+function encodeCursor(cursor: SyncCursor): string {
+  return Buffer.from(JSON.stringify(cursor)).toString("base64url");
+}
+
+function decodeCursor(raw: string): SyncCursor {
+  try {
+    const parsed = JSON.parse(Buffer.from(raw, "base64url").toString("utf8"));
+    if (
+      Array.isArray(parsed?.queue) &&
+      parsed.queue.length <= MAX_QUEUE_LENGTH &&
+      parsed.queue.every((id: unknown) => typeof id === "string" && DRIVE_ID_PATTERN.test(id)) &&
+      (parsed.pageToken === undefined || typeof parsed.pageToken === "string")
+    ) {
+      return { queue: parsed.queue, pageToken: parsed.pageToken };
+    }
+  } catch {
+    // jatuh ke error di bawah
+  }
+  throw new Error("Posisi sinkronisasi tidak valid. Ulangi sync dari awal.");
 }
 
 /**
- * Ambil satu halaman (maks. 1000, batas Drive API) foto image/* di sebuah
- * folder, tidak termasuk yang di-trash. Dipanggil berulang dengan
- * `pageToken` supaya sync ribuan foto dipecah jadi request pendek dan
- * tidak kena timeout serverless.
+ * Baca foto image/* di folder sumber BESERTA semua subfolder di dalamnya
+ * (tidak termasuk yang di-trash). Dikerjakan bertahap: tiap panggilan
+ * membaca beberapa halaman folder sampai terkumpul ~`maxPhotos` foto atau
+ * `budgetMs` habis, lalu mengembalikan `nextCursor` untuk dilanjutkan di
+ * request berikutnya — jadi ribuan foto di banyak folder tidak timeout.
+ * Folder di `skipFolderIds` (mis. "Hasil Seleksi") dilewati supaya salinan
+ * hasil seleksi tidak ikut terbaca sebagai foto sumber.
  */
-export async function listPhotosPage(
-  folderId: string,
+export async function listPhotosTree(
+  rootFolderId: string,
   photographerId: string,
-  pageToken?: string
+  options: { cursor?: string; skipFolderIds?: string[]; maxPhotos?: number; budgetMs?: number } = {}
 ): Promise<DrivePhotoPage> {
+  const { cursor, skipFolderIds = [], maxPhotos = 500, budgetMs = 30_000 } = options;
   const drive = await getDriveClient(photographerId);
-  const res = await drive.files.list({
-    q: `'${folderId}' in parents and mimeType contains 'image/' and trashed = false`,
-    fields: "nextPageToken, files(id, name, thumbnailLink, mimeType, size)",
-    orderBy: "name",
-    pageSize: 1000,
-    pageToken,
-    supportsAllDrives: true,
-    includeItemsFromAllDrives: true,
-  });
-
+  const skip = new Set(skipFolderIds);
+  const state: SyncCursor = cursor ? decodeCursor(cursor) : { queue: [rootFolderId] };
   const photos: DrivePhoto[] = [];
-  for (const f of res.data.files ?? []) {
-    if (!f.id || !f.name) continue;
-    photos.push({
-      driveFileId: f.id,
-      filename: f.name,
-      thumbnailUrl: f.thumbnailLink ?? null,
-      mimeType: f.mimeType ?? null,
-      sizeBytes: f.size && Number(f.size) <= 2_147_483_647 ? Number(f.size) : null,
+  const startedAt = Date.now();
+
+  while (state.queue.length > 0) {
+    const folderId = state.queue[0];
+
+    const res = await drive.files.list({
+      q: `'${folderId}' in parents and mimeType contains 'image/' and trashed = false`,
+      fields: "nextPageToken, files(id, name, thumbnailLink, mimeType, size)",
+      orderBy: "name",
+      pageSize: 1000,
+      pageToken: state.pageToken,
+      supportsAllDrives: true,
+      includeItemsFromAllDrives: true,
     });
+
+    for (const f of res.data.files ?? []) {
+      if (!f.id || !f.name) continue;
+      photos.push({
+        driveFileId: f.id,
+        filename: f.name,
+        thumbnailUrl: f.thumbnailLink ?? null,
+        mimeType: f.mimeType ?? null,
+        sizeBytes: f.size && Number(f.size) <= 2_147_483_647 ? Number(f.size) : null,
+      });
+    }
+
+    if (res.data.nextPageToken) {
+      state.pageToken = res.data.nextPageToken;
+    } else {
+      // Folder ini selesai: daftarkan subfoldernya ke antrean, lalu pindah ke folder berikutnya.
+      const subfolders = await listSubfolderIds(drive, folderId);
+      for (const id of subfolders) {
+        if (!skip.has(id) && !state.queue.includes(id) && state.queue.length < MAX_QUEUE_LENGTH) {
+          state.queue.push(id);
+        }
+      }
+      state.queue.shift();
+      state.pageToken = undefined;
+    }
+
+    if (photos.length >= maxPhotos || Date.now() - startedAt >= budgetMs) break;
   }
-  return { photos, nextPageToken: res.data.nextPageToken ?? null };
+
+  return {
+    photos,
+    nextCursor: state.queue.length > 0 ? encodeCursor(state) : null,
+  };
+}
+
+async function listSubfolderIds(
+  drive: Awaited<ReturnType<typeof getDriveClient>>,
+  folderId: string
+): Promise<string[]> {
+  const ids: string[] = [];
+  let pageToken: string | undefined;
+  do {
+    const res = await drive.files.list({
+      q: `'${folderId}' in parents and mimeType = '${FOLDER_MIME}' and trashed = false`,
+      fields: "nextPageToken, files(id, name)",
+      pageSize: 1000,
+      pageToken,
+      supportsAllDrives: true,
+      includeItemsFromAllDrives: true,
+    });
+    for (const f of res.data.files ?? []) {
+      if (f.id && f.name !== RESULT_FOLDER_NAME) ids.push(f.id);
+    }
+    pageToken = res.data.nextPageToken ?? undefined;
+  } while (pageToken);
+  return ids;
 }
 
 /**
