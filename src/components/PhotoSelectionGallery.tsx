@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CheckCircle2, Loader2, Save, FolderHeart, ZoomIn } from "lucide-react";
+import { CheckCircle2, Loader2, Save, FolderHeart } from "lucide-react";
 import PhotoLightbox from "@/components/PhotoLightbox";
 import ResilientImage from "@/components/ResilientImage";
 import { readJsonResponse } from "@/lib/http";
@@ -172,11 +172,9 @@ export default function PhotoSelectionGallery({
                 >
                   <button
                     type="button"
-                    onClick={() => toggle(photo.id)}
-                    disabled={isLocked}
-                    aria-pressed={isSelected}
-                    aria-label={`Pilih ${photo.filename}`}
-                    className="block aspect-[4/3] w-full disabled:cursor-not-allowed"
+                    onClick={() => setPreviewIndex(index)}
+                    aria-label={`Lihat ${photo.filename}`}
+                    className="block aspect-[4/3] w-full cursor-zoom-in"
                   >
                     <ResilientImage
                       src={photo.thumbnailUrl ? upsizeDriveThumbnail(photo.thumbnailUrl, GRID_THUMB_SIZE) : null}
@@ -186,19 +184,7 @@ export default function PhotoSelectionGallery({
                     />
 
                     {/* Overlay gelap hanya saat hover (perangkat dengan mouse) */}
-                    <div className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${isSelected ? "opacity-20" : "opacity-0 [@media(hover:hover)]:group-hover:opacity-100"}`} />
-
-                    {/* Indikator pilih: selalu tampil di mobile/layar sentuh, hover di desktop */}
-                    <div
-                      className={`absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 transform ${
-                        isSelected
-                          ? "bg-accent text-accent-foreground scale-100 opacity-100"
-                          : "bg-black/60 text-white border border-white/40 backdrop-blur-sm opacity-100 scale-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:scale-75 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:scale-100"
-                      }`}
-                      aria-hidden
-                    >
-                      <CheckCircle2 className="h-5 w-5" strokeWidth={2.5} />
-                    </div>
+                    <div className={`pointer-events-none absolute inset-0 bg-black/40 transition-opacity duration-300 ${isSelected ? "opacity-20" : "opacity-0 [@media(hover:hover)]:group-hover:opacity-100"}`} />
 
                     {/* Nama file saat hover */}
                     <div className="absolute bottom-0 left-0 hidden w-full p-4 translate-y-full bg-gradient-to-t from-black/80 to-transparent transition-transform duration-300 [@media(hover:hover)]:block group-hover:translate-y-0">
@@ -206,16 +192,20 @@ export default function PhotoSelectionGallery({
                     </div>
                   </button>
 
+                  {/* Tombol centang: satu-satunya cara memilih foto dari grid. Selalu tampil di layar sentuh, hover di desktop */}
                   <button
                     type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setPreviewIndex(index);
-                    }}
-                    aria-label={`Perbesar ${photo.filename}`}
-                    className="absolute left-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-black/60 text-white opacity-100 backdrop-blur-sm transition-opacity duration-300 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100"
+                    onClick={() => toggle(photo.id)}
+                    disabled={isLocked}
+                    aria-pressed={isSelected}
+                    aria-label={`Pilih ${photo.filename}`}
+                    className={`absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 disabled:cursor-not-allowed ${
+                      isSelected
+                        ? "bg-accent text-accent-foreground scale-100 opacity-100"
+                        : "bg-black/60 text-white border border-white/40 backdrop-blur-sm opacity-100 scale-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:scale-75 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:scale-100"
+                    }`}
                   >
-                    <ZoomIn className="h-5 w-5" strokeWidth={2} />
+                    <CheckCircle2 className="h-5 w-5" strokeWidth={2.5} />
                   </button>
                 </div>
               );
@@ -259,7 +249,7 @@ export default function PhotoSelectionGallery({
                   Foto Dipilih{maxSelections !== null ? ` (maks. ${maxSelections})` : ""}
                 </p>
                 <p className="text-xs text-muted">
-                  {limitMessage ?? "Ketuk foto atau ikon centang untuk memilih · ikon kaca pembesar untuk memperbesar"}
+                  {limitMessage ?? "Ketuk foto untuk melihat preview · ketuk ikon centang untuk memilih"}
                 </p>
               </div>
             </div>
