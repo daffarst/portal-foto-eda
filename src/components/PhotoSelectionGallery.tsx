@@ -48,7 +48,8 @@ export default function PhotoSelectionGallery({
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [limitMessage, setLimitMessage] = useState<string | null>(null);
-  const [previewPhoto, setPreviewPhoto] = useState<Photo | null>(null);
+  const [previewIndex, setPreviewIndex] = useState<number | null>(null);
+  const previewPhoto = previewIndex !== null ? photos[previewIndex] ?? null : null;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
@@ -160,7 +161,7 @@ export default function PhotoSelectionGallery({
         ) : (
           <>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
-            {photos.slice(0, visibleCount).map((photo) => {
+            {photos.slice(0, visibleCount).map((photo, index) => {
               const isSelected = selectedIds.has(photo.id);
               return (
                 <div
@@ -209,7 +210,7 @@ export default function PhotoSelectionGallery({
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setPreviewPhoto(photo);
+                      setPreviewIndex(index);
                     }}
                     aria-label={`Perbesar ${photo.filename}`}
                     className="absolute left-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-black/60 text-white opacity-100 backdrop-blur-sm transition-opacity duration-300 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100"
@@ -230,11 +231,16 @@ export default function PhotoSelectionGallery({
         )}
       </div>
 
-      {previewPhoto && (
+      {previewPhoto && previewIndex !== null && (
         <PhotoLightbox
+          key={previewPhoto.id}
           sessionCode={sessionCode}
           photo={previewPhoto}
-          onClose={() => setPreviewPhoto(null)}
+          position={previewIndex + 1}
+          total={photos.length}
+          onPrev={previewIndex > 0 ? () => setPreviewIndex(previewIndex - 1) : undefined}
+          onNext={previewIndex < photos.length - 1 ? () => setPreviewIndex(previewIndex + 1) : undefined}
+          onClose={() => setPreviewIndex(null)}
         />
       )}
 
