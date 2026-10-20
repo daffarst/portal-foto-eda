@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 import ResilientImage from "@/components/ResilientImage";
 import { upsizeDriveThumbnail } from "@/lib/utils";
 
@@ -10,6 +10,9 @@ const PREVIEW_SIZE = 2000;
 interface PhotoLightboxProps {
   sessionCode: string;
   photo: { id: string; filename: string; thumbnailUrl: string | null };
+  isSelected?: boolean;
+  onToggleSelect?: () => void;
+  limitMessage?: string | null;
   position?: number;
   total?: number;
   onPrev?: () => void;
@@ -22,6 +25,9 @@ const SWIPE_THRESHOLD = 50;
 export default function PhotoLightbox({
   sessionCode,
   photo,
+  isSelected = false,
+  onToggleSelect,
+  limitMessage,
   position,
   total,
   onPrev,
@@ -130,19 +136,39 @@ export default function PhotoLightbox({
       </div>
 
       <div
-        className="mt-4 flex items-center gap-4"
+        className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2"
         onClick={(e) => e.stopPropagation()}
       >
         <p className="text-sm text-white/70">
           {photo.filename}
           {position !== undefined && total !== undefined ? ` (${position}/${total})` : ""}
         </p>
+        {onToggleSelect && (
+          <button
+            type="button"
+            onClick={onToggleSelect}
+            aria-pressed={isSelected}
+            className={`flex cursor-pointer items-center gap-2 rounded-full px-5 py-2 text-sm font-medium transition-colors duration-200 ${
+              isSelected
+                ? "bg-accent text-accent-foreground hover:opacity-90"
+                : "border border-white/40 bg-white/10 text-white hover:bg-white/20"
+            }`}
+          >
+            <CheckCircle2 className="h-4 w-4" strokeWidth={2.5} />
+            {isSelected ? "Terpilih" : "Pilih Foto"}
+          </button>
+        )}
         <a
           href={downloadUrl}
           className="cursor-pointer rounded-full bg-accent px-5 py-2 text-sm font-medium text-accent-foreground transition-colors duration-200 hover:opacity-90"
         >
           Unduh Foto Ini
         </a>
+        {limitMessage && (
+          <p role="alert" className="w-full text-center text-sm text-red-300">
+            {limitMessage}
+          </p>
+        )}
       </div>
     </div>
   );

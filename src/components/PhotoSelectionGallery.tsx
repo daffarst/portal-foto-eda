@@ -236,6 +236,9 @@ export default function PhotoSelectionGallery({
           key={previewPhoto.id}
           sessionCode={sessionCode}
           photo={previewPhoto}
+          isSelected={selectedIds.has(previewPhoto.id)}
+          onToggleSelect={isLocked ? undefined : () => toggle(previewPhoto.id)}
+          limitMessage={limitMessage}
           position={previewIndex + 1}
           total={photos.length}
           onPrev={previewIndex > 0 ? () => setPreviewIndex(previewIndex - 1) : undefined}
