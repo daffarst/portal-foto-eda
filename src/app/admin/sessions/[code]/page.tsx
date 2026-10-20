@@ -4,6 +4,7 @@ import { getCurrentPhotographer } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import SessionActions from "@/components/SessionActions";
 import SessionSettingsForm from "@/components/SessionSettingsForm";
+import DeleteSessionButton from "@/components/DeleteSessionButton";
 
 interface PageProps {
   params: Promise<{ code: string }>;
@@ -127,6 +128,19 @@ export default async function AdminSessionDetailPage({ params }: PageProps) {
               ))}
             </ul>
           )}
+        </section>
+        <section className="mt-10 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-red-400/30 p-4">
+          <div>
+            <h2 className="font-heading text-sm font-medium text-foreground">Hapus Sesi</h2>
+            <p className="mt-1 text-xs text-muted">
+              Menghapus sesi, foto, dan pilihan klien dari portal. File di Google Drive tidak terhapus.
+            </p>
+          </div>
+          <DeleteSessionButton
+            sessionCode={session.sessionCode}
+            clientName={session.clientName}
+            redirectTo="/admin/dashboard"
+          />
         </section>
       </div>
     </main>

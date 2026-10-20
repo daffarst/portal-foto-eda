@@ -92,3 +92,24 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
   return NextResponse.json({ session: updated });
 }
+
+/** DELETE /api/sessions/:code — fotografer pemilik hapus sesi beserta foto & seleksinya (file di Drive tidak ikut terhapus). */
+export async function DELETE(_request: Request, { params }: RouteParams) {
+  const auth = await requirePhotographer();
+  if (!auth.ok) {
+    return NextResponse.json({ error: "Tidak diizinkan." }, { status: 401 });
+  }
+
+  const { code } = await params;
+  const session = await prisma.session.findUnique({ where: { sessionCode: code.toUpperCase() } });
+  if (!session) {
+    return NextResponse.json({ error: "Kode sesi tidak ditemukan." }, { status: 404 });
+  }
+  if (session.photographerId !== auth.photographer.id) {
+    return NextResponse.json({ error: "Tidak diizinkan." }, { status: 403 });
+  }
+
+  await prisma.session.delete({ where: { id: session.id } });
+
+  return NextResponse.json({ ok: true });
+}

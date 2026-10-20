@@ -6,6 +6,7 @@ import { getConnectedAccountEmail } from "@/lib/drive";
 import CreateSessionForm from "@/components/CreateSessionForm";
 import AdminLogoutButton from "@/components/AdminLogoutButton";
 import DriveDestinationForm from "@/components/DriveDestinationForm";
+import DeleteSessionButton from "@/components/DeleteSessionButton";
 
 interface PageProps {
   searchParams: Promise<{ drive_connected?: string; drive_error?: string }>;
@@ -127,6 +128,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
                     <th className="px-4 py-3 font-medium">Foto</th>
                     <th className="px-4 py-3 font-medium">Dipilih</th>
                     <th className="px-4 py-3 font-medium">Status</th>
+                    <th className="px-4 py-3 text-right font-medium">Aksi</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -149,6 +151,13 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
                         <span className="rounded-full border border-border px-2.5 py-0.5 text-xs text-muted">
                           {STATUS_LABEL[session.status] ?? session.status}
                         </span>
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <DeleteSessionButton
+                          sessionCode={session.sessionCode}
+                          clientName={session.clientName}
+                          variant="icon"
+                        />
                       </td>
                     </tr>
                   ))}
